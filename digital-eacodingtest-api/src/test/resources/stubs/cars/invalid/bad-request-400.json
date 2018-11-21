@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/cars"
+  },
+  "response": {
+    "status": 400
+  }
+}
