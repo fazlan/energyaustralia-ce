@@ -2,6 +2,10 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.5.
 
+## Prerequisite
+
+Both the Angular CLI and generated project have dependencies that require Node 8.9 or higher, together with NPM 5.5.1 or higher.
+
 ## Development server
 
 ### Proxying the backend services
@@ -15,6 +19,8 @@ From `digital-eacodingtest-api` directory, run `./gradlew clean bootRun` to star
 From `digital-eacodingtest-ui` directory, run `npm run serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Build
+
+Run `npm i` 
 
 Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
