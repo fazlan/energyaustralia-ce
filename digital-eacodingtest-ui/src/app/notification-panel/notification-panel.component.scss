@@ -1,0 +1,22 @@
+.notification-panel {
+
+  padding: 20px;
+
+  .notification {
+    font-weight: bold;
+    display: flex;
+    padding: 4px 10px;
+  }
+
+  .warn {
+    color: #FFA500;
+    background-color: #FFDDA7;
+    border: 0 solid #FFA500;
+  }
+
+  .success {
+    color: #248044;
+    background-color: #DCF0A9;
+    border: 0 solid #248044;
+  }
+}
