@@ -3,61 +3,70 @@ package au.com.energyaustralia.digital.eacodingtest.car;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-class GroupByMakeShowsCarShowsTransformer implements CarShowsTransformer<Map<String, Map<String, List<String>>>> {
+class GroupByMakeShowsCarShowsTransformer implements CarShowsTransformer<List<CarMakeResource>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupByMakeShowsCarShowsTransformer.class);
 
     @Override
-    public Map<String, Map<String, List<String>>> transform(List<FlattenedCarShow> cars) {
+    public List<CarMakeResource> transform(List<FlattenedCarShow> cars) {
 
-        LOGGER.info("class={} method=transform point=start cars={}", getClass().getSimpleName(), cars.size());
+        LOGGER.info("class={} method=transform point=start number-of-flattened-cars={}", getClass().getSimpleName(), cars.size());
 
-        Map<String, Map<String, List<String>>> response = cars
+        Map<String, Map<String, List<String>>> groupedByCars = cars
                 .stream()
-                .filter(hasShowName().and(hasCarModel()).and(hasCarMake()))
+                .filter(FlattenedCarShow.HAS_CAR_MAKE.and(FlattenedCarShow.HAS_CAR_MODEL).and(FlattenedCarShow.HAS_CAR_SHOW))
                 .collect(
                         Collectors.groupingBy(FlattenedCarShow::getCarMake,
                                 Collectors.groupingBy(FlattenedCarShow::getShow, Collectors.mapping(FlattenedCarShow::getCarModel, Collectors.toList()))
                         ));
 
-        LOGGER.info("class={} method=transform point=completed number-of-grouped-by-make={}", getClass().getSimpleName(), response.size());
+        LOGGER.info("class={} method=transform point=completed number-of-grouped-by-make={}", getClass().getSimpleName(), groupedByCars.size());
 
-        return response;
-
+        return groupedByCars.entrySet()
+                .stream()
+                .map(toCarMakeResource())
+                .sorted(Comparator.comparing(CarMakeResource::getMake))
+                .collect(Collectors.toList());
     }
 
     /**
-     * Predicate to test if car make is not empty or null.
+     * Maps Map<Make, Map<Show, List<Model>> into a CarMakeResource. Sorts the shows by name in natural order.
      *
-     * @return the predicate.
+     * @return the transformed <code>CarMakeResource</code>
      */
-    private Predicate<FlattenedCarShow> hasCarMake() {
-        return cs -> !StringUtils.isEmpty(cs.getCarMake());
+    private Function<Map.Entry<String, Map<String, List<String>>>, CarMakeResource> toCarMakeResource() {
+        return carsByMake -> {
+
+            List<CarShowModelsResource> carShowModelsResources = carsByMake.getValue().entrySet()
+                    .stream()
+                    .map(toCarShowResource())
+                    .sorted(Comparator.comparing(CarShowModelsResource::getName))
+                    .collect(Collectors.toList());
+
+            return new CarMakeResource(carsByMake.getKey(), carShowModelsResources);
+        };
     }
 
     /**
-     * Predicate to test if car model is not empty or null.
+     * Maps Map<Show, List<Model> into a CarShowModelsResource. Sorts the models in natural order.
      *
-     * @return the predicate.
+     * @return the transformed <code>CarShowModelsResource</code>
      */
-    private Predicate<FlattenedCarShow> hasCarModel() {
-        return cs -> !StringUtils.isEmpty(cs.getCarModel());
-    }
+    private Function<Map.Entry<String, List<String>>, CarShowModelsResource> toCarShowResource() {
+        return carsByShow -> {
+            List<String> models = carsByShow.getValue();
+            Collections.sort(models);
 
-    /**
-     * Predicate to test if show name is not empty or null.
-     *
-     * @return the predicate.
-     */
-    private Predicate<FlattenedCarShow> hasShowName() {
-        return cs -> !StringUtils.isEmpty(cs.getShow());
+            return new CarShowModelsResource(carsByShow.getKey(), models);
+        };
     }
 }
