@@ -1,3 +1,7 @@
+### Problem to solve
+
+http://eacodingtest.digital.energyaustralia.com.au/ “
+ 
 ### Application design
 
 The application design can be found in `digital-eacodingtest-design` diirectory.
