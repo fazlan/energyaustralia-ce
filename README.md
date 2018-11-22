@@ -1,3 +1,7 @@
+### Application design
+
+The application design can be found in `digital-eacodingtest-design` diirectory.
+
 ### Running the application
 
 From `digital-eacodingtest-api` directory, run `./gradlew clean bootRun` to start the api (if not already) at http://localhost:18080/api/v1.   
