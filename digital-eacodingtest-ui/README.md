@@ -6,11 +6,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ### Proxying the backend services
 
-Please refer to `proxy.config.json`. A proxy is made to http://localhost:18080.
+Please refer to `proxy.config.json`. A proxy is made to the api at http://localhost:18080.
 
 ### Running the application
 
-From `digital-eacodingtest-api` directory, run `./gradlew clean bootRun`to start the api at http://localhost:18080/api/v1.   
+From `digital-eacodingtest-api` directory, run `./gradlew clean bootRun` to start the api (if not already) at http://localhost:18080/api/v1.   
 
 From `digital-eacodingtest-ui` directory, run `npm run serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
