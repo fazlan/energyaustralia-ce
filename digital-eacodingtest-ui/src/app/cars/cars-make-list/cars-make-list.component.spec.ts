@@ -65,6 +65,30 @@ describe('CarsMakeListComponent', () => {
     expect(carsService.listCarsByMake).toHaveBeenCalled();
   });
 
+  it('should resubscribe to the cars observable on refresh', () => {
+    const fixture = TestBed.createComponent(CarsMakeListComponent);
+    const component = fixture.debugElement.componentInstance;
+    const carsService: CarsService = TestBed.get(CarsService);
+    const listCarsByMakeSpy = spyOn(carsService, 'listCarsByMake').and.callThrough();
+
+    fixture.detectChanges();
+
+    const firstlyFetchedCars = component.cars;
+
+    const compiled = fixture.debugElement.nativeElement;
+    const refreshLink = compiled.querySelector('a.refresh');
+
+    listCarsByMakeSpy.and.returnValue(of(response));
+
+    refreshLink.dispatchEvent(new Event('click'));
+
+    const secondlyFetchedCars = component.cars;
+
+    expect(firstlyFetchedCars).toEqual([]);
+    expect(listCarsByMakeSpy.calls.count()).toBe(2);
+    expect(secondlyFetchedCars).toEqual(response);
+  });
+
   it('should render warning notification when no cars returned', () => {
     const fixture = TestBed.createComponent(CarsMakeListComponent);
 

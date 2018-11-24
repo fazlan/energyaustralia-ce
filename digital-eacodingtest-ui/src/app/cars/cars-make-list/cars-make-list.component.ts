@@ -9,7 +9,7 @@ import { CarMake } from './../car-make.model';
   selector: 'eact-cars-make-list',
   template: `
      <eact-notification-panel *ngIf="cars && cars.length === 0" [type]="'warn'">
-        <span>No results found, please <a (click)="onRefresh($event)">refresh</a>.</span>
+        <span>No results found, please <a class="refresh" (click)="onRefresh($event)">refresh</a>.</span>
      </eact-notification-panel>
      <eact-notification-panel *ngIf="cars && cars.length > 0" [type]="'success'">
         <span>{{cars.length | i18nPlural: {'=1': '1 car', 'other': '# cars'} }} found</span>
