@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 
 import { CarMake } from './../car-make.model';
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'eact-cars-make',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
      <div class="cars-make-panel">
         <span class="make-name">{{car.make}} ({{car.shows.length | i18nPlural: {'=0': 'No shows', '=1': '1 show', 'other': '# shows'} }})</span>
