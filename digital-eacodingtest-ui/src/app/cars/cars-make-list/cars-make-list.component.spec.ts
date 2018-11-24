@@ -8,10 +8,9 @@ import { CarsMakeListComponent } from './cars-make-list.component';
 
 @Component({
   selector: 'eact-notification-panel',
-  template: `{{notification}}({{type}})`
+  template: `<ng-content></ng-content> ({{type}})`
 })
 class MockedNotificationPanelComponent {
-  @Input() notification: string;
   @Input() type: string;
 }
 
@@ -72,10 +71,10 @@ describe('CarsMakeListComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('eact-notification-panel').textContent).toEqual('No results found, please refresh.(warn)');
+    expect(compiled.querySelector('eact-notification-panel').textContent).toEqual('No results found, please refresh. (warn)');
   });
 
-  it('should render success notification when cars returned', () => {
+  it('should render success notification when single car returned', () => {
     const fixture = TestBed.createComponent(CarsMakeListComponent);
     const carsService: CarsService = TestBed.get(CarsService);
     spyOn(carsService, 'listCarsByMake').and.returnValue(of(response));
@@ -83,18 +82,29 @@ describe('CarsMakeListComponent', () => {
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('eact-notification-panel').textContent).toEqual('1 results found.(success)');
+    expect(compiled.querySelector('eact-notification-panel').textContent).toEqual('1 car found (success)');
+  });
+
+  it('should render success notification when multiple cars returned', () => {
+    const fixture = TestBed.createComponent(CarsMakeListComponent);
+    const carsService: CarsService = TestBed.get(CarsService);
+    spyOn(carsService, 'listCarsByMake').and.returnValue(of([...response, ...response]));
+
+    fixture.detectChanges();
+
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('eact-notification-panel').textContent).toEqual('2 cars found (success)');
   });
 
   it('should render all the shows the make was displayed', () => {
     const fixture = TestBed.createComponent(CarsMakeListComponent);
     const carsService: CarsService = TestBed.get(CarsService);
-    spyOn(carsService, 'listCarsByMake').and.returnValue(of(response));
+    spyOn(carsService, 'listCarsByMake').and.returnValue(of([...response, ...response]));
 
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelectorAll('eact-notification-panel').length).toEqual(1);
+    expect(compiled.querySelectorAll('eact-cars-make').length).toEqual(2);
 
   });
 });

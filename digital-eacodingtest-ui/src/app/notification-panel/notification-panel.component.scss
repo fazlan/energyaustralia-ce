@@ -6,6 +6,11 @@
     font-weight: bold;
     display: flex;
     padding: 4px 10px;
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+    }
   }
 
   .warn {

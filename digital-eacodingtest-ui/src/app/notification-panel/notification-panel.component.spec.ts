@@ -1,13 +1,22 @@
 import { TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
 import { NotificationPanelComponent } from './notification-panel.component';
+
+@Component({
+  selector: 'eact-notification-panel-test',
+  template: `<eact-notification-panel [type]="'success'">Test content</eact-notification-panel>`
+})
+class NotificationPanelTestComponent {
+}
 
 describe('NotificationPanelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
-        NotificationPanelComponent
+        NotificationPanelComponent,
+        NotificationPanelTestComponent
       ],
     }).compileComponents();
   });
@@ -19,27 +28,13 @@ describe('NotificationPanelComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should render notification as passed via 'notification' input`, () => {
-    const fixture = TestBed.createComponent(NotificationPanelComponent);
-    const component = fixture.debugElement.componentInstance;
-    component.notification = 'Notification message';
+  it(`should render notification type with content passed`, () => {
+    const fixture = TestBed.createComponent(NotificationPanelTestComponent);
 
     fixture.detectChanges();
 
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.notification').textContent).toContain(component.notification);
-  });
-
-  it(`should render notification type as passed via 'type' input`, () => {
-    const fixture = TestBed.createComponent(NotificationPanelComponent);
-    const component = fixture.debugElement.componentInstance;
-    component.notification = 'Notification message';
-    component.type = 'success';
-
-    fixture.detectChanges();
-
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector(`.notification.${component.type}`).textContent).toContain(component.notification);
+    expect(compiled.querySelector(`.notification.success`).textContent).toContain('Test content');
   });
 
 });

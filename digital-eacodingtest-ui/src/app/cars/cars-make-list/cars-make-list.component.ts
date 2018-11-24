@@ -8,8 +8,12 @@ import { CarMake } from './../car-make.model';
 @Component({
   selector: 'eact-cars-make-list',
   template: `
-     <eact-notification-panel *ngIf="cars && cars.length === 0" [notification]="'No results found, please refresh.'" [type]="'warn'"></eact-notification-panel>
-     <eact-notification-panel *ngIf="cars && cars.length > 0" [notification]="cars.length + ' results found.'" [type]="'success'"></eact-notification-panel>
+     <eact-notification-panel *ngIf="cars && cars.length === 0" [type]="'warn'">
+        <span>No results found, please <a (click)="onRefresh($event)">refresh</a>.</span>
+     </eact-notification-panel>
+     <eact-notification-panel *ngIf="cars && cars.length > 0" [type]="'success'">
+        <span>{{cars.length | i18nPlural: {'=1': '1 car', 'other': '# cars'} }} found</span>
+     </eact-notification-panel>
      <eact-cars-make [car]="car" *ngFor="let car of cars"></eact-cars-make>
   `
 })
@@ -23,6 +27,15 @@ export class CarsMakeListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.load();
+  }
+
+  onRefresh($event): void {
+    $event.preventDefault();
+    this.load();
+  }
+
+  private load(): void {
     this.carsService.listCarsByMake()
       .pipe(takeUntil(this.destroy$))
       .subscribe(cars => this.cars = cars);
